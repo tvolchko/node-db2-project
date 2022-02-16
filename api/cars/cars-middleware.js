@@ -37,18 +37,25 @@ const checkVinNumberValid = (req, res, next) => {
 }
 
 async function checkVinNumberUnique(req, res, next) {
-  Cars.getAll()
-    .then(cars => {
-      console.log(cars)
-      const filtered = cars.filter(car => car.vin === req.body.vin)
-      console.log(filtered)
-      if(filtered.length){
-        res.status(400).json({ message: `vin ${req.body.vin} already exists` })
-      } else {
-        next()
-      }
-    })
-    .catch(next)
+  let result = await Cars.getByVin(req.body.vin)
+  console.log(result)
+  if(result){
+    res.status(400).json({ message: `vin ${req.body.vin} already exists` })
+  } else {
+    next()
+  }
+
+  // Cars.getAll()
+  //   .then(cars => {
+  //     const filtered = cars.filter(car => car.vin === req.body.vin)
+  //     if(filtered.length){
+  //       res.status(400).json({ message: `vin ${req.body.vin} already exists` })
+  //     } else {
+  //       next()
+  //     }
+  //   })
+  //   .catch(next)
+
   // let cars = await Cars.getAll()
   // let filtered = cars.filter(car => {car.vin === req.body.vin})
   // if(filtered.length() > 0) {
